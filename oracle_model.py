@@ -8,6 +8,8 @@ usando SHAP para interpretação das previsões.
 import json
 import pickle
 import numpy as np
+import pandas as pd
+import shap
 from pathlib import Path
 from typing import Dict, List, Tuple, Any
 
@@ -44,6 +46,7 @@ class OracleX37:
         self.model = None
         self.is_trained = False
         self.training_metrics = {}
+        self.explainer = None
 
         if model_type == "classification":
             self.model = RandomForestClassifier(
@@ -88,6 +91,10 @@ class OracleX37:
         
         # Treinar o modelo
         self.model.fit(X_train, y_train)
+        
+        # Inicializar o explicador SHAP
+        self.explainer = shap.TreeExplainer(self.model)
+        
         self.is_trained = True
         
         # Calcular métricas
@@ -179,14 +186,14 @@ class OracleX37:
 
     def explain_prediction(self, X: np.ndarray, sample_idx: int = 0) -> Dict[str, Any]:
         """
-        Explica uma predição específica usando feature importance local.
+        Explica uma predição específica usando SHAP (Explicabilidade avançada).
         
         Args:
             X: Array de features
             sample_idx: Índice da amostra a explicar
             
         Returns:
-            Dicionário com explicação da predição
+            Dicionário com explicação detalhada da predição
         """
         if not self.is_trained:
             raise RuntimeError("Modelo não foi treinado. Execute train() primeiro.")
@@ -199,31 +206,50 @@ class OracleX37:
         if self.model_type == "classification":
             probabilities = self.model.predict_proba(sample)[0]
             confidence = float(np.max(probabilities))
+            # Para SHAP em classificação binária, pegamos os valores para a classe predita
+            shap_values = self.explainer.shap_values(sample)
+            # Se for lista (multiclasse), pega a predição atual, senão pega direto (binário em algumas versões)
+            if isinstance(shap_values, list):
+                current_shap = shap_values[int(prediction)][0]
+            else:
+                current_shap = shap_values[0]
         else:
             confidence = None
-        
-        # Obter importância das features
-        importances = self.model.feature_importances_
+            current_shap = self.explainer.shap_values(sample)[0]
         
         if self.feature_names is None:
-            feature_names = [f"feature_{i}" for i in range(len(importances))]
+            feature_names = [f"feature_{i}" for i in range(X.shape[1])]
         else:
             feature_names = self.feature_names
         
-        # Top 5 features mais importantes
-        top_features = {}
-        sorted_idx = np.argsort(importances)[::-1][:5]
-        for i in sorted_idx:
-            top_features[feature_names[i]] = {
-                "importance": float(importances[i]),
-                "value": float(X_scaled[sample_idx, i])
+        # Criar dicionário de impactos SHAP
+        shap_explanation = {}
+        for i, name in enumerate(feature_names):
+            shap_explanation[name] = {
+                "shap_value": float(current_shap[i]),
+                "feature_value": float(X_scaled[sample_idx, i])
             }
         
+        # Ordenar por impacto absoluto
+        sorted_features = sorted(
+            shap_explanation.items(), 
+            key=lambda item: abs(item[1]["shap_value"]), 
+            reverse=True
+        )[:5]
+        
+        # Obter valor base
+        if isinstance(self.explainer.expected_value, (list, np.ndarray)):
+            base_val = float(self.explainer.expected_value[int(prediction)])
+        else:
+            base_val = float(self.explainer.expected_value)
+
         explanation = {
             "prediction": int(prediction) if self.model_type == "classification" else float(prediction),
             "confidence": confidence,
-            "top_features": top_features,
-            "model_type": self.model_type
+            "top_impact_features": dict(sorted_features),
+            "base_value": base_val,
+            "model_type": self.model_type,
+            "method": "SHAP (Lundberg et al.)"
         }
         
         return explanation
@@ -243,7 +269,8 @@ class OracleX37:
             "scaler": self.scaler,
             "model_type": self.model_type,
             "feature_names": self.feature_names,
-            "training_metrics": self.training_metrics
+            "training_metrics": self.training_metrics,
+            "explainer": self.explainer
         }
         
         with open(filepath, 'wb') as f:
@@ -264,6 +291,7 @@ class OracleX37:
         self.model_type = model_data["model_type"]
         self.feature_names = model_data["feature_names"]
         self.training_metrics = model_data["training_metrics"]
+        self.explainer = model_data.get("explainer")
         self.is_trained = True
 
     def get_metrics(self) -> Dict[str, Any]:

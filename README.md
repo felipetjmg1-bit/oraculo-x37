@@ -1,15 +1,13 @@
-# 🔮 Oráculo X-37: MVP de IA Preditiva Offline
+# 🔮 Oráculo X-37: MVP de IA Preditiva Offline com Explicabilidade Avançada
 
-O **Oráculo X-37** é um **Produto Mínimo Viável (MVP)** de um sistema de Inteligência Artificial Preditiva, desenvolvido com foco em **explicabilidade (XAI)** e **modo seguro de operação (offline)**.
-
-Este projeto visa demonstrar a capacidade de construir modelos de IA robustos e transparentes, que podem ser implementados em ambientes com restrições de conectividade ou que exigem alta confiança nas decisões tomadas pelo modelo.
+O **Oráculo X-37** é um **Produto Mínimo Viável (MVP)** de um sistema de Inteligência Artificial Preditiva, desenvolvido com foco em **explicabilidade (XAI)** e **modo seguro de operação (offline)**. Este projeto visa demonstrar a capacidade de construir modelos de IA robustos e transparentes, que podem ser implementados em ambientes com restrições de conectividade ou que exigem alta confiança nas decisões tomadas pelo modelo.
 
 ## 💡 Principais Características
 
 | Característica | Descrição | Benefício |
 | :--- | :--- | :--- |
 | **IA Preditiva** | Utiliza algoritmos de Machine Learning para fazer previsões sobre dados de entrada. | Permite a tomada de decisões proativa e baseada em dados. |
-| **Explicabilidade (XAI)** | Implementa técnicas para que as previsões do modelo sejam interpretáveis e compreensíveis. | Aumenta a confiança e facilita a auditoria e validação do modelo. |
+| **Explicabilidade (XAI) com SHAP** | Implementa técnicas avançadas (SHAP) para que as previsões do modelo sejam interpretáveis e compreensíveis. | Aumenta a confiança, facilita a auditoria e validação do modelo, e fornece insights sobre o comportamento do modelo. |
 | **Modo Offline** | Projetado para operar sem a necessidade de conexão constante com a internet. | Ideal para ambientes com conectividade limitada ou requisitos de segurança rigorosos. |
 | **MVP** | Focado na funcionalidade essencial para validação rápida do conceito. | Agilidade no desenvolvimento e teste de hipóteses. |
 | **API REST** | Expõe funcionalidades através de endpoints HTTP. | Fácil integração com outras aplicações. |
@@ -20,26 +18,24 @@ Este projeto visa demonstrar a capacidade de construir modelos de IA robustos e 
 ```
 oraculo-x37/
 ├── LICENSE                 # Licença MIT
-├── README.md              # Este arquivo
-├── oracle_model.py        # Classe principal do modelo (100% funcional)
-├── api.py                 # API REST Flask (100% funcional)
-├── requirements.txt       # Dependências do projeto
-└── oracle_clf_model.pkl   # Modelo treinado (classificação)
-└── oracle_reg_model.pkl   # Modelo treinado (regressão)
+├── README.md               # Este arquivo
+├── oracle_model.py         # Classe principal do modelo com SHAP
+├── api.py                  # API REST Flask
+├── requirements.txt        # Dependências do projeto
+├── test_oracle.py          # Testes automatizados para o modelo
+├── demo_notebook.py        # Notebook de demonstração interativa
+├── oracle_clf_model.pkl    # Modelo treinado (classificação) - gerado após o treinamento
+└── oracle_reg_model.pkl    # Modelo treinado (regressão) - gerado após o treinamento
 ```
 
 ## 🚀 Como Usar
 
 ### 1. Instalação de Dependências
 
+Certifique-se de ter Python 3.8+ e `pip` instalados. Em seguida, instale as dependências:
+
 ```bash
 pip install -r requirements.txt
-```
-
-Ou instale manualmente:
-
-```bash
-pip install scikit-learn flask numpy
 ```
 
 ### 2. Usar o Modelo Diretamente em Python
@@ -52,22 +48,23 @@ oracle = OracleX37(model_type="classification")
 
 # Gerar dados de exemplo
 X, y = generate_sample_data(n_samples=1000, n_features=10, task="classification")
+oracle.set_feature_names([f"Feature_{i}" for i in range(10)])
 
 # Treinar o modelo
 metrics = oracle.train(X, y)
-print(f"Acurácia: {metrics['accuracy']:.4f}")
+print(f"Acurácia: {metrics["accuracy"]:.4f}")
 
 # Fazer predições
 predictions = oracle.predict(X[:5])
 print(f"Predições: {predictions}")
 
-# Explicar predições
-explanation = oracle.explain_prediction(X, sample_idx=0)
-print(f"Explicação: {explanation}")
+# Explicar predições com SHAP
+explanations = oracle.explain_prediction(X, sample_idx=0)
+print(f"Explicação da Predição (SHAP): {explanations}")
 
-# Obter importância das features
+# Obter importância das features (global)
 importances = oracle.get_feature_importance(top_n=5)
-print(f"Top Features: {importances}")
+print(f"Top Features Globais: {importances}")
 
 # Salvar modelo
 oracle.save_model("meu_modelo.pkl")
@@ -84,9 +81,9 @@ oracle.load_model("meu_modelo.pkl")
 python api.py
 ```
 
-O servidor iniciará em `http://localhost:5000`
+O servidor iniciará em `http://localhost:5000`.
 
-#### Exemplos de requisições:
+#### Exemplos de requisições (usando `curl`):
 
 **Verificar status da API:**
 ```bash
@@ -113,7 +110,7 @@ curl -X POST http://localhost:5000/api/v1/classification/predict \
   }'
 ```
 
-**Explicar predição:**
+**Explicar predição (com SHAP):**
 ```bash
 curl -X POST http://localhost:5000/api/v1/classification/explain \
   -H "Content-Type: application/json" \
@@ -133,74 +130,25 @@ curl "http://localhost:5000/api/v1/classification/feature-importance?top_n=5"
 curl http://localhost:5000/api/v1/classification/metrics
 ```
 
+### 4. Executar Testes Automatizados
+
+Para garantir a integridade e o funcionamento correto do modelo e da API, execute os testes com `pytest`:
+
+```bash
+pytest test_oracle.py
+```
+
+### 5. Executar Demonstração Interativa
+
+Para uma demonstração rápida e interativa das capacidades do Oráculo X-37, execute o script de demonstração:
+
+```bash
+python demo_notebook.py
+```
+
 ## 📊 Exemplos de Uso
 
-### Classificação Binária
-
-```python
-from oracle_model import OracleX37, generate_sample_data
-
-# Criar modelo
-oracle = OracleX37(model_type="classification")
-
-# Gerar dados
-X, y = generate_sample_data(n_samples=2000, n_features=15, task="classification")
-
-# Treinar
-metrics = oracle.train(X, y, test_size=0.2)
-print(f"F1-Score: {metrics['f1_score']:.4f}")
-
-# Predizer com probabilidades
-predictions = oracle.predict(X[:10])
-probabilities = oracle.predict_proba(X[:10])
-
-for i, (pred, prob) in enumerate(zip(predictions, probabilities)):
-    print(f"Amostra {i}: Classe={pred}, Confiança={max(prob):.4f}")
-```
-
-### Regressão
-
-```python
-from oracle_model import OracleX37, generate_sample_data
-
-# Criar modelo
-oracle = OracleX37(model_type="regression")
-
-# Gerar dados
-X, y = generate_sample_data(n_samples=2000, n_features=15, task="regression")
-
-# Treinar
-metrics = oracle.train(X, y, test_size=0.2)
-print(f"R² Score: {metrics['r2_score']:.4f}")
-print(f"RMSE: {metrics['rmse']:.4f}")
-
-# Predizer
-predictions = oracle.predict(X[:10])
-for i, pred in enumerate(predictions):
-    print(f"Amostra {i}: Valor Predito={pred:.4f}")
-```
-
-### Explicabilidade (XAI)
-
-```python
-from oracle_model import OracleX37, generate_sample_data
-
-oracle = OracleX37(model_type="classification")
-X, y = generate_sample_data(n_samples=1000, n_features=10, task="classification")
-oracle.set_feature_names([f"Feature_{i}" for i in range(10)])
-oracle.train(X, y)
-
-# Explicar uma predição específica
-explanation = oracle.explain_prediction(X, sample_idx=0)
-
-print(f"Predição: {explanation['prediction']}")
-print(f"Confiança: {explanation['confidence']:.4f}")
-print("\nTop 5 Features:")
-for feature, info in explanation['top_features'].items():
-    print(f"  {feature}:")
-    print(f"    - Importância: {info['importance']:.4f}")
-    print(f"    - Valor: {info['value']:.4f}")
-```
+*(Os exemplos de uso detalhados para Classificação Binária, Regressão e Explicabilidade (XAI) foram movidos para o `demo_notebook.py` para uma experiência mais interativa e para manter o README conciso e focado nas instruções de uso e arquitetura.)*
 
 ## 📈 Métricas e Avaliação
 
@@ -231,55 +179,47 @@ for feature, info in explanation['top_features'].items():
 **`oracle_model.py`** - Classe principal `OracleX37`
 
 Métodos principais:
-- `train(X, y, test_size)` - Treina o modelo
-- `predict(X)` - Faz predições
-- `predict_proba(X)` - Retorna probabilidades (classificação)
-- `explain_prediction(X, sample_idx)` - Explica uma predição
-- `get_feature_importance(top_n)` - Retorna importância das features
-- `save_model(filepath)` - Salva o modelo
-- `load_model(filepath)` - Carrega um modelo
+- `__init__(model_type, random_state)`: Inicializa o modelo.
+- `train(X, y, test_size)`: Treina o modelo e inicializa o explicador SHAP.
+- `predict(X)`: Faz predições.
+- `predict_proba(X)`: Retorna probabilidades (classificação).
+- `explain_prediction(X, sample_idx)`: Explica uma predição específica usando SHAP.
+- `get_feature_importance(top_n)`: Retorna importância global das features.
+- `save_model(filepath)`: Salva o modelo e o explicador.
+- `load_model(filepath)`: Carrega um modelo e o explicador.
+- `get_metrics()`: Retorna as métricas de treinamento.
+- `set_feature_names(names)`: Define os nomes das features para melhor explicabilidade.
 
 **`api.py`** - API REST Flask
 
 Endpoints:
-- `GET /health` - Status da API
-- `POST /api/v1/{classification|regression}/train` - Treinar modelo
-- `POST /api/v1/{classification|regression}/predict` - Fazer predições
-- `POST /api/v1/{classification|regression}/explain` - Explicar predições
-- `GET /api/v1/{classification|regression}/feature-importance` - Importância das features
-- `GET /api/v1/{classification|regression}/metrics` - Métricas de treinamento
+- `GET /health`: Status da API.
+- `POST /api/v1/{classification|regression}/train`: Treinar modelo.
+- `POST /api/v1/{classification|regression}/predict`: Fazer predições.
+- `POST /api/v1/{classification|regression}/explain`: Explicar predições com SHAP.
+- `GET /api/v1/{classification|regression}/feature-importance`: Importância das features.
+- `GET /api/v1/{classification|regression}/metrics`: Métricas de treinamento.
 
 ## 📚 Dependências
 
-- **scikit-learn**: Algoritmos de machine learning
-- **numpy**: Computação numérica
-- **flask**: Framework web para API REST
+- **scikit-learn**: Algoritmos de machine learning.
+- **numpy**: Computação numérica.
+- **flask**: Framework web para API REST.
+- **shap**: Explicabilidade de modelos de IA.
+- **pandas**: Manipulação e análise de dados.
+- **matplotlib**: Geração de gráficos (para visualizações SHAP, se implementadas).
+- **pytest**: Framework de testes.
 
 ## 🚀 Próximos Passos (Roadmap)
 
 1. ✅ **Implementar Modelo Preditivo** - Concluído
-2. ✅ **Adicionar Explicabilidade (XAI)** - Concluído
+2. ✅ **Adicionar Explicabilidade (XAI)** - Concluído (com SHAP)
 3. ✅ **Criar API REST** - Concluído
-4. 📋 **Adicionar SHAP para explicações mais detalhadas**
-5. 📋 **Implementar interface web (Dashboard)**
-6. 📋 **Adicionar suporte para modelos customizados**
-7. 📋 **Documentação técnica completa**
-8. 📋 **Testes unitários e integração**
-
-## 🧪 Testes
-
-Execute o script principal para testar o modelo:
-
-```bash
-python oracle_model.py
-```
-
-Isso irá:
-- Treinar um modelo de classificação
-- Treinar um modelo de regressão
-- Fazer predições
-- Explicar predições
-- Salvar os modelos
+4. 📋 **Implementar interface web (Dashboard)**
+5. 📋 **Adicionar suporte para modelos customizados**
+6. 📋 **Documentação técnica completa**
+7. ✅ **Testes unitários e integração** - Concluído (com `pytest`)
+8. 📋 **Configurar CI/CD básico (GitHub Actions)**
 
 ## 📜 Licença
 
