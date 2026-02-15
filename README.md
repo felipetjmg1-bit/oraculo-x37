@@ -24,6 +24,7 @@ oraculo-x37/
 ├── requirements.txt        # Dependências do projeto
 ├── test_oracle.py          # Testes automatizados para o modelo
 ├── demo_notebook.py        # Notebook de demonstração interativa
+├── hardware_bridge.py      # Integração simulada com hardware (Sensores/Atuadores)
 ├── oracle_clf_model.pkl    # Modelo treinado (classificação) - gerado após o treinamento
 └── oracle_reg_model.pkl    # Modelo treinado (regressão) - gerado após o treinamento
 ```
@@ -144,6 +145,14 @@ Para uma demonstração rápida e interativa das capacidades do Oráculo X-37, e
 
 ```bash
 python demo_notebook.py
+```
+
+### 6. Simular Integração com Hardware
+
+Para testar como o Oráculo interage com componentes físicos (sensores e atuadores) em tempo real:
+
+```bash
+python hardware_bridge.py
 ```
 
 ## 📊 Exemplos de Uso
