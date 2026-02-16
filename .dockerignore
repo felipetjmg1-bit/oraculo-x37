@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.git/
+.github/
+tests/
+models/*.pkl
+.pytest_cache/
+.coverage
+htmlcov/

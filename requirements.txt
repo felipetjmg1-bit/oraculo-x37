@@ -5,3 +5,7 @@ shap>=0.42.0
 pandas>=2.0.0
 matplotlib>=3.7.0
 pytest>=7.0.0
+pytest-cov>=4.1.0
+black>=23.7.0
+flake8>=6.1.0
+python-dotenv>=1.0.0

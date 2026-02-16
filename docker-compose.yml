@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  oraculo-api:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./models:/app/models
+    environment:
+      - DEBUG=False
+      - PORT=5000
+    restart: always
