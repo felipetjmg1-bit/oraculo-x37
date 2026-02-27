@@ -1,1 +1,1 @@
-# Pacote App Oráculo X-37
+"""Oráculo X-37 - IA Preditiva Enterprise Package"""
