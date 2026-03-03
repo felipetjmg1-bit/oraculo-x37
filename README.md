@@ -1,4 +1,4 @@
-# 🔮 Oráculo X-37 — IA Preditiva Enterprise
+# 🇧🇷💪😱🔮 Oráculo X-37 — IA Preditiva Enterprise
 
 ![CI Status](https://github.com/felipetjmg1-bit/oraculo-x37/actions/workflows/ci.yml/badge.svg)
 
