@@ -1,79 +1,157 @@
-# 🇧🇷💪😱🔮 Oráculo X-37 — IA Preditiva Enterprise
+# 🔮 Oráculo X-37
 
-![CI Status](https://github.com/felipetjmg1-bit/oraculo-x37/actions/workflows/ci.yml/badge.svg)
+**IA Preditiva Offline com Explicabilidade e Modo Seguro**
 
-O **Oráculo X-37** é um sistema de Inteligência Artificial modular e escalável, projetado para fornecer predições offline com alta explicabilidade (XAI). Esta versão foi refatorada para seguir os padrões de **Clean Architecture** e **MLOps Profissional**.
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![Status: Active Development](https://img.shields.io/badge/Status-Active%20Development-brightgreen.svg)]()
+[![GitHub Stars](https://img.shields.io/github/stars/felipetjmg1-bit/oraculo-x37?style=social)](https://github.com/felipetjmg1-bit/oraculo-x37)
 
-## 🏗️ Arquitetura do Projeto
+## 📋 Visão Geral
 
-O projeto segue uma estrutura modular para separação clara de responsabilidades:
+**Oráculo X-37** é um sistema de inteligência artificial preditiva avançado projetado para funcionar completamente offline, oferecendo explicabilidade total e modo seguro para operações críticas. Este projeto representa uma abordagem inovadora para IA confiável e interpretável, ideal para aplicações governamentais, financeiras e de segurança nacional.
 
-```text
+## 🎯 Características Principais
+
+- **Funcionamento Offline:** Operação completa sem conexão com a internet
+- **Explicabilidade Total:** Compreenda cada decisão do modelo
+- **Modo Seguro:** Operação segura para ambientes críticos
+- **Modelos Pré-treinados:** Modelos otimizados para classificação e regressão
+- **API RESTful:** Interface moderna e fácil de usar
+- **Testes Automatizados:** Cobertura completa de testes
+- **Documentação Abrangente:** Guias detalhados para desenvolvimento e deployment
+
+## 🏗️ Arquitetura
+
+```
 oraculo-x37/
-├── app/                # Código principal da aplicação
-│   ├── api/            # Endpoints REST (Flask Blueprints)
-│   ├── core/           # Configurações globais e variáveis de ambiente
-│   ├── services/       # Lógica de negócio e integração ML
-│   ├── models/         # Definições de dados e carregamento de modelos
-│   └── main.py         # Ponto de entrada da aplicação
-├── scripts/            # Scripts utilitários (Treinamento, Migração)
-├── tests/              # Testes unitários e de integração (Pytest)
-├── models/             # Artefatos de modelos treinados (GitIgnored)
-├── Dockerfile          # Containerização profissional
-└── docker-compose.yml  # Orquestração local
+├── app/
+│   ├── api/
+│   │   └── routes.py
+│   ├── core/
+│   │   └── config.py
+│   ├── models/
+│   │   └── model_loader.py
+│   ├── services/
+│   │   └── oracle_service.py
+│   ├── utils/
+│   └── main.py
+├── models/
+│   ├── oracle_clf_model.pkl
+│   └── oracle_reg_model.pkl
+├── scripts/
+│   └── train.py
+├── tests/
+│   ├── test_api.py
+│   └── test_service.py
+└── requirements.txt
 ```
 
-## 🚀 Como Executar
+## 🚀 Início Rápido
 
-### Localmente (Python 3.11+)
+### Pré-requisitos
 
-1. Instale as dependências:
-   ```bash
-   pip install -r requirements.txt
-   ```
-2. Treine os modelos iniciais:
-   ```bash
-   python -m scripts.train
-   ```
-3. Inicie a API:
-   ```bash
-   python -m app.main
-   ```
+- Python 3.8+
+- pip ou conda
+- 1GB de RAM mínimo
 
-### Via Docker
+### Instalação
 
 ```bash
-docker-compose up --build
+# Clone o repositório
+git clone https://github.com/felipetjmg1-bit/oraculo-x37.git
+cd oraculo-x37
+
+# Crie um ambiente virtual
+python -m venv venv
+source venv/bin/activate  # No Windows: venv\Scripts\activate
+
+# Instale as dependências
+pip install -r requirements.txt
+
+# Inicie o servidor
+python app/main.py
 ```
 
-## 🧪 Testes e Qualidade
+## 📊 Casos de Uso
 
-Rodar a suíte de testes com cobertura:
+### Análise Preditiva
+
+Utilize o Oráculo X-37 para prever tendências e padrões em seus dados:
+
+```python
+from app.services.oracle_service import OracleService
+
+oracle = OracleService()
+predictions = oracle.predict(data)
+explanations = oracle.explain(predictions)
+```
+
+### API REST
+
 ```bash
+curl -X POST http://localhost:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{"features": [1.0, 2.0, 3.0]}'
+```
+
+## 🔐 Segurança
+
+- Operação completamente offline
+- Sem transmissão de dados para servidores externos
+- Modo seguro para ambientes críticos
+- Validação rigorosa de entrada
+- Logs de auditoria completos
+
+## 📈 Roadmap 2026
+
+| Trimestre | Objetivo | Status |
+|-----------|----------|--------|
+| Q1 | Otimização de modelos | 🔄 Em Progresso |
+| Q2 | Integração com sistemas governamentais | 📋 Planejado |
+| Q3 | Certificação de segurança | 📋 Planejado |
+| Q4 | Expansão para novos domínios | 📋 Planejado |
+
+## 🧪 Testes
+
+```bash
+# Executar todos os testes
+pytest
+
+# Com cobertura
 pytest --cov=app tests/
+
+# Apenas testes de API
+pytest tests/test_api.py -v
 ```
 
-Padronização de código:
-```bash
-black .
-flake8 .
-```
+## 📚 Documentação
 
-## 📊 Endpoints Principais
+- [Guia de Instalação](docs/INSTALLATION.md)
+- [Documentação da API](docs/API.md)
+- [Guia de Treinamento de Modelos](docs/TRAINING.md)
 
-| Método | Rota | Descrição |
-|--------|------|-----------|
-| GET | `/api/v1/health` | Status da API |
-| POST | `/api/v1/classification/train` | Treina modelo de classificação |
-| POST | `/api/v1/classification/predict` | Realiza predição de classe |
-| POST | `/api/v1/classification/explain` | Explica predição via SHAP |
+## 🤝 Como Contribuir
 
-## 🛡️ Segurança e MLOps
+Veja [CONTRIBUTING.md](docs/CONTRIBUTING.md) para diretrizes de contribuição.
 
-- **Variáveis de Ambiente**: Configurações sensíveis via `.env`.
-- **Versionamento de Modelos**: Modelos são salvos com metadados de treinamento.
-- **Isolamento**: Lógica de hardware separada da lógica de inferência.
-- **CI/CD**: Pipeline automatizado para lint e testes em cada push.
+## 📞 Suporte
+
+- **Issues:** [GitHub Issues](https://github.com/felipetjmg1-bit/oraculo-x37/issues)
+- **Email:** support@impulsodigital.com.br
+
+## 📄 Licença
+
+MIT License - veja [LICENSE](LICENSE)
+
+## 👨‍💼 Desenvolvedor
+
+**Felipe Marcos de Abreu Aquino**
+- CEO & Founder da Impulso Digital
+- Especialista em IA Preditiva e Segurança
 
 ---
-Desenvolvido por **Manus** para **Oráculo X-37**.
+
+**Desenvolvido com ❤️ para o futuro inteligente do Brasil**
+
+*Oráculo X-37 - IA Preditiva Soberana e Confiável*
