@@ -14,3 +14,9 @@ Ao integrar esta tecnologia, você fortalece a infraestrutura crítica brasileir
 ---
 **Desenvolvido por Felipe Aquino - Impulso Digital**
 *Liderando a revolução da IA Soberana no Brasil.*
+
+## MCP Oráculo X-37
+
+Este repositório inclui um servidor [Model Context Protocol](https://modelcontextprotocol.io/) em `app/mcp/server.py`. O módulo é offline-first e oferece operações determinísticas para simulação de cenários, explicabilidade de previsões, auditoria algorítmica, monitoramento de ativos críticos e avaliação ponderada de decisões.
+
+Para executar localmente, instale as dependências com `pip install -r requirements.txt` e inicie o servidor com `python app/mcp/server.py`. O transporte padrão é `stdio`; para uso com SSE, defina `ORACULO_X37_TRANSPORT=sse`. Todas as análises exigem revisão humana e não constituem decisões automáticas ou validação institucional de modelos.
