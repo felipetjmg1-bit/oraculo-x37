@@ -1,17 +1,22 @@
-# Como Contribuir / How to Contribute
+# Como contribuir
 
-**PT-BR:** Agradecemos seu interesse em contribuir para este projeto!
+Obrigado por considerar uma contribuição. O projeto está em estágio de maturidade descrito no `README.md`; propostas devem respeitar esse escopo e distinguir implementação, simulação e planos futuros.
 
-1.  Faça um fork do repositório.
-2.  Crie uma nova branch para sua feature (`git checkout -b feature/sua-feature`).
-3.  Faça suas alterações e commit-as (`git commit -m 'feat: Adiciona nova feature'`).
-4.  Envie para a branch (`git push origin feature/sua-feature`).
-5.  Abra um Pull Request.
+## Issues
 
-**EN:** We appreciate your interest in contributing to this project!
+- Pesquise issues existentes antes de abrir uma nova.
+- Descreva o contexto, o comportamento esperado e o observado; inclua passos mínimos de reprodução, ambiente e logs sanitizados quando aplicável.
+- Para melhorias, explique o problema que pretende resolver e mantenha a proposta alinhada ao escopo documentado.
+- Não publique credenciais, dados pessoais, arquivos confidenciais ou informações sensíveis.
 
-1.  Fork the repository.
-2.  Create a new branch for your feature (`git checkout -b feature/your-feature`).
-3.  Make your changes and commit them (`git commit -m 'feat: Add new feature'`).
-4.  Push to the branch (`git push origin feature/your-feature`).
-5.  Open a Pull Request.
+## Pull requests
+
+1. Faça fork do repositório e crie uma branch curta (`docs/...`, `fix/...` ou `feat/...`).
+2. Faça alterações focadas, preservando compatibilidade e atribuições de terceiros.
+3. Atualize a documentação quando alterar comportamento ou requisitos.
+4. Execute os testes e verificações indicados no `README.md`; se não houver rotina automatizada, informe isso na PR e descreva a validação manual realizada.
+5. Abra uma Pull Request com resumo, motivação, mudanças, testes/validações e limitações conhecidas.
+
+## Revisão
+
+Mantenha commits compreensíveis, seja respeitoso e responda às solicitações de revisão. Nenhuma contribuição implica suporte, certificação ou adequação a produção. Consulte também o código de conduta e a política de segurança do repositório, quando existentes.
