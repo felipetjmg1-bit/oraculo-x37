@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import shap
 from typing import Dict, List, Any, Optional, Tuple
@@ -42,19 +44,19 @@ class OracleService:
         X_train, X_test, y_train, y_test = train_test_split(
             X_scaled, y, test_size=test_size, random_state=self.random_state
         )
-        
+
         self.model.fit(X_train, y_train)
         self.explainer = shap.TreeExplainer(self.model)
         self.is_trained = True
-        
+
         y_pred = self.model.predict(X_test)
-        
+
         if self.model_type == "classification":
             self.training_metrics = {
                 "accuracy": float(accuracy_score(y_test, y_pred)),
-                "precision": float(precision_score(y_test, y_pred, average='weighted', zero_division=0)),
-                "recall": float(recall_score(y_test, y_pred, average='weighted', zero_division=0)),
-                "f1_score": float(f1_score(y_test, y_pred, average='weighted', zero_division=0)),
+                "precision": float(precision_score(y_test, y_pred, average="weighted", zero_division=0)),
+                "recall": float(recall_score(y_test, y_pred, average="weighted", zero_division=0)),
+                "f1_score": float(f1_score(y_test, y_pred, average="weighted", zero_division=0)),
                 "test_samples": len(y_test),
                 "train_samples": len(y_train)
             }
@@ -86,42 +88,37 @@ class OracleService:
     def explain_prediction(self, X: np.ndarray, sample_idx: int = 0) -> Dict[str, Any]:
         if not self.is_trained:
             raise RuntimeError("Modelo não treinado.")
-        
+
         X_scaled = self.scaler.transform(X)
-        sample = X_scaled[sample_idx:sample_idx+1]
+        sample = X_scaled[sample_idx:sample_idx + 1]
         prediction = self.model.predict(sample)[0]
-        
+
         if self.model_type == "classification":
             probabilities = self.model.predict_proba(sample)[0]
             confidence = float(np.max(probabilities))
             shap_values = self.explainer.shap_values(sample)
-            # SHAP 0.45+ retorna array (samples, features, classes) ou similar
             if isinstance(shap_values, list):
-                # Caso antigo ou específico
                 current_shap = shap_values[int(prediction)][0]
             elif len(shap_values.shape) == 3:
-                # (samples, features, classes)
                 current_shap = shap_values[0, :, int(prediction)]
             else:
-                # (samples, features) para binário ou regressão
                 current_shap = shap_values[0]
         else:
             confidence = None
             current_shap = self.explainer.shap_values(sample)[0]
-        
+
         feature_names = self.feature_names or [f"feature_{i}" for i in range(X.shape[1])]
-        
         top_impact = {}
         for i, name in enumerate(feature_names):
             top_impact[name] = {
                 "shap_value": float(current_shap[i]),
                 "feature_value": float(X_scaled[sample_idx, i])
             }
-        
+
         sorted_features = sorted(
             top_impact.items(), key=lambda x: abs(x[1]["shap_value"]), reverse=True
         )[:5]
-        
+
         if isinstance(self.explainer.expected_value, (list, np.ndarray)):
             base_val = float(self.explainer.expected_value[int(prediction)])
         else:
@@ -152,7 +149,20 @@ class OracleService:
         ModelLoader.save_model(data, filepath)
 
     def load(self, filepath: str):
-        data = ModelLoader.load_model(filepath)
+        try:
+            data = ModelLoader.load_model(filepath)
+        except (OSError, EOFError, ImportError, ModuleNotFoundError, AttributeError, ValueError) as exc:
+            warnings.warn(
+                f"Modelo salvo em {filepath!r} não pôde ser carregado "
+                f"({exc}). O serviço iniciará sem modelo treinado.",
+                RuntimeWarning,
+                stacklevel=2
+            )
+            self._init_model()
+            self.is_trained = False
+            self.explainer = None
+            return False
+
         if data:
             self.model = data["model"]
             self.scaler = data["scaler"]
@@ -163,6 +173,7 @@ class OracleService:
             self.is_trained = True
             return True
         return False
+
 
 def generate_sample_data(n_samples: int = 1000, n_features: int = 10, task: str = "classification"):
     np.random.seed(42)
