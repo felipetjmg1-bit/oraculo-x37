@@ -12,4 +12,5 @@ pytest-cov==4.1.0
 black==23.7.0
 flake8==6.1.0
 python-dotenv==1.0.0
+pydantic>=2.6,<2.14
 fastmcp>=2.0.0
