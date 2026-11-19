@@ -9,9 +9,7 @@ description = "API de machine learning e ferramentas MCP para análise explicáv
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
-authors = [
-  { name = "Felipe Marcos de Abreu Aquino" }
-]
+authors = [{ name = "Felipe Marcos de Abreu Aquino" }]
 dependencies = [
   "scikit-learn==1.3.0",
   "numpy==1.24.0",
@@ -23,6 +21,7 @@ dependencies = [
   "pandas==2.0.0",
   "matplotlib==3.7.0",
   "python-dotenv==1.0.0",
+  "pydantic>=2.6,<2.14",
   "fastmcp>=2.0.0"
 ]
 
