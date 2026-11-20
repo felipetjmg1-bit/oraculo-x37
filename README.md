@@ -1,69 +1,94 @@
-![Status: Demonstração](https://img.shields.io/badge/Status-Demonstração-blue) | [![Licença MIT](https://img.shields.io/github/license/felipetjmg1-bit/oraculo-x37)](LICENSE) | [![Patrocinar](https://img.shields.io/badge/Sponsor-GitHub%20Sponsors-ea4aaa?logo=githubsponsors)](https://github.com/sponsors/felipetjmg1-bit)
+# Oráculo X-37
 
-# Oráculo X-37 — API e Ferramentas MCP
+**[Protótipo experimental]** Repositório Python com API Flask para treinamento e inferência de modelos scikit-learn e um servidor MCP separado com ferramentas determinísticas de análise. Não é sistema de produção nem serviço de decisão automatizada validado.
 
-## Visão geral
+## Problema e objetivo
 
-Fatos verificáveis no código: repositório Python com API Flask para treinar e servir modelos scikit-learn de classificação e regressão, além de servidor FastMCP separado com ferramentas determinísticas para simulação exploratória, explicação de previsões, auditoria descritiva, monitoramento por limiares e comparação ponderada de opções. O README também apresenta objetivos de soberania tecnológica, IA e blockchain e descreve usos estratégicos, mas essas alegações não são demonstradas por integrações, dados ou validações no código inspecionado. O serviço gera dados sintéticos de treino.
+O projeto reúne uma API de demonstração para classificação/regressão e ferramentas MCP para inspeção exploratória. É útil como base experimental para estudar Machine Learning, integração por ferramentas e explicabilidade em aplicações de baixo custo computacional no contexto brasileiro.
 
-## Objetivo e valor
+## Componentes implementados
 
-**Problema/escopo:** API Python de classificação e regressão com scikit-learn e servidor MCP com ferramentas determinísticas de análise explicável.
+- API Flask em `app/main.py`, com rotas definidas em `app/api/routes.py`.
+- Serviços e modelos scikit-learn em `app/services/` e `app/models/`.
+- Script de treinamento em `scripts/train.py`.
+- Servidor MCP separado em `app/mcp/server.py`.
+- Artefatos serializados em `models/`.
+- Testes existentes em `tests/`.
 
-**Valor verificável hoje:** o repositório torna explícitos seus artefatos, interfaces e limitações para que mantenedores e contribuidores possam avaliar o que existe sem confundir demonstração, proposta e produção.
+A API HTTP e o servidor MCP são pontos de entrada separados. Não presuma que o servidor MCP esteja embutido na API Flask.
 
-## Arquitetura e tecnologias
+## Como executar a API
 
-Parcialmente inferível pela árvore, mas não documentada formalmente: app/main.py cria a aplicação Flask e registra app/api/routes.py; app/services/oracle_service.py encapsula treinamento, predição e explicação, app/models/model_loader.py lida com serialização, e app/core/config.py concentra configuração. app/mcp/server.py é servidor MCP separado. Há modelos .pkl em models/, script de treino em scripts/train.py e testes em tests/. README não explica fronteiras ou integração entre API, modelos e MCP; docs/mcp-integration-findings.md contém afirmações que não correspondem integralmente aos arquivos atuais.
+Requisitos: Python 3.10 ou superior, sujeito à compatibilidade real das dependências.
 
-```mermaid
-flowchart LR
-  H[Cliente HTTP] --> F[API Flask]
-  F --> M[Modelos scikit-learn e dados sintéticos]
-  C[Cliente MCP] --> X[FastMCP]
-  X --> D[Ferramentas determinísticas]
+```bash
+git clone https://github.com/felipetjmg1-bit/oraculo-x37.git
+cd oraculo-x37
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+python -m app.main
 ```
 
-- Python (linguagem indicada pelo GitHub e pelos arquivos).
-- API Flask; scikit-learn com RandomForestClassifier/RandomForestRegressor, NumPy e SHAP no serviço de modelos.
-- Servidor MCP via FastMCP; ferramentas implementadas em app/mcp/server.py.
-- Configuração usa python-dotenv; testes escritos para pytest; há Dockerfile e docker-compose.yml.
-- Manifestos também declaram pandas, matplotlib, FastAPI, Uvicorn e Gunicorn, mas isso não comprova uso efetivo no código inspecionado; as rotas da API importam Flask.
-- Há divergências de versões entre requirements.txt e pyproject.toml; CI usa Python 3.10 e Dockerfile parte de Python 3.11.
+A API é configurada para iniciar na porta 5000 por padrão, conforme `.env.example` e `app/core/config.py`. O arquivo `.env.example` documenta variáveis, mas não contém credenciais reais.
 
-## Início rápido
+**Atenção às dependências:** o código da API importa Flask. Os manifestos atuais têm versões/faixas divergentes e devem ser reconciliados em trabalho separado após instalação limpa e execução dos testes. Esta documentação não declara que o setup atual esteja validado.
 
-Os comandos abaixo refletem instruções, manifestos ou pontos de entrada presentes no repositório. Dependências externas, segredos e serviços estão indicados quando aplicável; a presença de um comando não equivale a uma execução validada.
+## Exemplo HTTP
 
-1. README documenta a instalação com pip install -r requirements.txt.
-2. README documenta python app/mcp/server.py para iniciar o servidor MCP; declara transporte padrão stdio e seleção de sse com ORACULO_X37_TRANSPORT=sse.
-3. Workflow .github/workflows/python-app.yml instala requirements.txt, executa verificações flake8 e chama pytest em pushes e pull requests para main; isso comprova comandos configurados, não que passem.
-4. Não executei comandos. A instalação limpa indicada no README não está comprovada como funcional: requirements.txt não declara Flask, embora a API e seus testes o importem.
+Verifique a rota de saúde:
 
+```bash
+curl http://127.0.0.1:5000/api/v1/health
+```
 
-## Exemplo de uso
+Treinamento demonstrativo com dados sintéticos:
 
-Exemplo existente em tests/test_api.py: POST /api/v1/classification/train com n_samples igual a 50; em seguida POST /api/v1/classification/predict com data contendo uma linha de dez valores decimais. O teste também chama GET /api/v1/health. São rotas e sequência baseadas no código/testes; README não documenta comando verificado para iniciar a API Flask e as chamadas não há execução validada registrada.
+```bash
+curl -X POST http://127.0.0.1:5000/api/v1/classification/train \
+  -H "Content-Type: application/json" \
+  -d '{"n_samples": 50, "n_features": 10, "test_size": 0.2}'
+```
 
-## Estado e limitações
+Predição após treinamento:
 
-**Maturidade indicada:** Demonstração.
+```bash
+curl -X POST http://127.0.0.1:5000/api/v1/classification/predict \
+  -H "Content-Type: application/json" \
+  -d '{"data": [[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]]}'
+```
 
-- Não tratar como capacidades comprovadas as alegações do README sobre segurança nacional, alto nível, independência de infraestrutura estrangeira, soberania de dados ou blockchain: os arquivos examinados não as demonstram.
-- Há incompatibilidade aparente de dependências: API e tests/test_api.py importam Flask, ausente de requirements.txt e da lista do pyproject.toml; em contraste, o manifesto declara FastAPI, que não aparece nas rotas inspecionadas. Instalação/testes limpos podem falhar; não foram executados.
-- requirements.txt fixa versões diferentes das faixas em pyproject.toml. O manifesto diz Python >=3.7, mas server.py usa sintaxe de união de tipos com |, incompatível com versões anteriores a Python 3.10.
-- O próprio código qualifica a simulação como exploratória, não causal ou probabilística calibrada; não inferir previsões operacionais ou validação de modelos. O código exige revisão humana.
+A resposta contém o status e as métricas ou predições calculadas. Os valores são ilustrativos; não representam desempenho de modelo validado em dados reais.
 
-## Contribuição
+## Servidor MCP
 
-Leia [CONTRIBUTING.md](CONTRIBUTING.md) antes de abrir uma issue ou pull request. Para reportes de segurança, siga a orientação específica do repositório, se houver.
+O ponto de entrada separado é:
 
-## Licença
+```bash
+python app/mcp/server.py
+```
 
-Este repositório está licenciado sob **MIT**; consulte [LICENSE](LICENSE).
+O transporte e as ferramentas disponíveis devem ser conferidos no próprio módulo e na documentação MCP do repositório.
 
-## Patrocínio e apoio
+## Segurança, privacidade e limitações
 
-O desenvolvimento aberto exige tempo para manutenção, documentação, testes, revisão de contribuições e resposta a issues. Se este projeto for útil, considere apoiar a continuidade pelo [GitHub Sponsors](https://github.com/sponsors/felipetjmg1-bit). O apoio não representa promessa de funcionalidades, prazo de entrega ou suporte comercial.
+- A API demonstrativa não deve ser exposta diretamente à internet sem autenticação, autorização, TLS, rate limiting, validação reforçada e revisão de segurança.
+- Não envie dados pessoais, sensíveis ou sigilosos; use dados sintéticos ou anonimizados.
+- Os dados sintéticos de treinamento não demonstram generalização para dados reais.
+- Explicações de modelo dependem dos dados, do estimador e das condições de execução; não equivalem a causalidade nem a validação científica.
+- Arquivos pickle devem ser tratados como artefatos confiáveis apenas quando sua origem e integridade forem verificadas. Não carregue modelos de fontes desconhecidas.
+- O servidor MCP requer configuração e avaliação próprias; não presuma autenticação ou isolamento de produção.
+- Para aplicações sujeitas à LGPD, defina finalidade, base legal, minimização, retenção, controle de acesso e revisão humana.
 
-[![Patrocinar felipetjmg1-bit](https://img.shields.io/badge/Patrocinar%20no-GitHub%20Sponsors-ea4aaa?logo=githubsponsors)](https://github.com/sponsors/felipetjmg1-bit)
+## Testes
+
+```bash
+pytest -q
+```
+
+Os testes estão em `tests/`. Não afirmamos que passaram nesta PR; a instalação limpa deve ser validada depois de resolver a divergência entre `requirements.txt` e `pyproject.toml`.
+
+## Dependências e licença
+
+O repositório mantém `requirements.txt` e `pyproject.toml`; atualmente não estão perfeitamente alinhados. Não alteramos as versões nesta PR para evitar uma atualização incompatível sem testes. Licença MIT: consulte [LICENSE](LICENSE).
