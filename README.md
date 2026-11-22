@@ -6,11 +6,11 @@
 </p>
 
 
-**[Protótipo experimental]** Repositório Python com API Flask para treinamento e inferência de modelos scikit-learn e um servidor MCP separado com ferramentas determinísticas de análise. Não é sistema de produção nem serviço de decisão automatizada validado.
+**[Aplicação demonstrativa em validação]** Repositório Python com API Flask para treinamento e inferência de modelos scikit-learn e um servidor MCP separado com ferramentas determinísticas de análise. Não é sistema de produção nem serviço de decisão automatizada validado.
 
 ## Problema e objetivo
 
-O projeto reúne uma API de demonstração para classificação/regressão e ferramentas MCP para inspeção exploratória. É útil como base experimental para estudar Machine Learning, integração por ferramentas e explicabilidade em aplicações de baixo custo computacional no contexto brasileiro.
+O projeto reúne uma API de demonstração para classificação/regressão e ferramentas MCP para inspeção exploratória. É útil como base de desenvolvimento para estudar Machine Learning, integração por ferramentas e explicabilidade em aplicações de baixo custo computacional no contexto brasileiro.
 
 ## Componentes implementados
 
