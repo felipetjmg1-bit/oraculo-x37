@@ -1,5 +1,11 @@
 # Oráculo X-37
 
+
+<p align="center">
+  <img src="PROJECT-OVERVIEW.svg" alt="Diagrama de funcionalidades de Oráculo X-37" width="100%">
+</p>
+
+
 **[Protótipo experimental]** Repositório Python com API Flask para treinamento e inferência de modelos scikit-learn e um servidor MCP separado com ferramentas determinísticas de análise. Não é sistema de produção nem serviço de decisão automatizada validado.
 
 ## Problema e objetivo
@@ -92,3 +98,8 @@ Os testes estão em `tests/`. Não afirmamos que passaram nesta PR; a instalaç�
 ## Dependências e licença
 
 O repositório mantém `requirements.txt` e `pyproject.toml`; atualmente não estão perfeitamente alinhados. Não alteramos as versões nesta PR para evitar uma atualização incompatível sem testes. Licença MIT: consulte [LICENSE](LICENSE).
+
+
+---
+
+**Empresa responsável:** Impulso Digital Soluções em IA.
