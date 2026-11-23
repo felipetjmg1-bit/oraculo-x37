@@ -113,3 +113,9 @@ Consulte o [guia textual com as etapas do projeto](docs/PROCESSO-PASSO-A-PASSO.m
 ## Fluxo passo a passo
 
 Consulte o [guia textual com as etapas do projeto](docs/PROCESSO-PASSO-A-PASSO.md). O infográfico acima resume visualmente o mesmo fluxo.
+
+
+## Evidência de execução da API
+
+- [Workflow de instalação, testes e inicialização](.github/workflows/runtime-evidence.yml)
+- [Escopo e limites das evidências](docs/RUNTIME-EVIDENCE.md)
