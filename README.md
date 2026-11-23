@@ -119,3 +119,9 @@ Consulte o [guia textual com as etapas do projeto](docs/PROCESSO-PASSO-A-PASSO.m
 
 - [Workflow de instalação, testes e inicialização](.github/workflows/runtime-evidence.yml)
 - [Escopo e limites das evidências](docs/RUNTIME-EVIDENCE.md)
+
+
+## Validação do servidor MCP
+
+- [Testes automatizados das cinco ferramentas](tests/test_mcp_server.py)
+- [Escopo e limitações da validação MCP](docs/MCP-VALIDATION.md)
