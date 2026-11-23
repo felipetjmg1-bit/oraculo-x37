@@ -108,3 +108,8 @@ O repositório mantém `requirements.txt` e `pyproject.toml`; atualmente não es
 ## Fluxo passo a passo
 
 Consulte o [guia textual com as etapas do projeto](docs/PROCESSO-PASSO-A-PASSO.md). O infográfico acima resume visualmente o mesmo fluxo.
+
+
+## Fluxo passo a passo
+
+Consulte o [guia textual com as etapas do projeto](docs/PROCESSO-PASSO-A-PASSO.md). O infográfico acima resume visualmente o mesmo fluxo.

@@ -21,8 +21,7 @@ Usar o servidor MCP separado para análises determinísticas.
 ## 5. INSPECIONAR SAÍDA
 
 Revisar resultado, metadados e limites antes de qualquer decisão.
+
 ## Resultado e limites
 
 Predição demonstrativa + ferramentas de análise. Não é decisão validada em produção.
-
-Este guia descreve o fluxo documentado no repositório. Recursos futuros devem ser identificados como planejados, e não como funcionalidades já disponíveis.
