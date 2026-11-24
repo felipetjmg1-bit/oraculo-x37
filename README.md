@@ -1,31 +1,34 @@
 # Oráculo X-37
 
-
 <p align="center">
-  <img src="PROJECT-OVERVIEW.svg" alt="Diagrama de funcionalidades de Oráculo X-37" width="100%">
+  <img src="PROJECT-OVERVIEW.svg" alt="Fluxo funcional do Oráculo X-37" width="100%">
 </p>
 
+**Aplicação demonstrativa em desenvolvimento e validação.** O Oráculo X-37 reúne uma API Flask para treinamento e inferência de modelos scikit-learn e um servidor MCP independente com ferramentas determinísticas de análise. Não é um sistema de produção nem um serviço de decisão automatizada validado.
 
-**[Aplicação demonstrativa em validação]** Repositório Python com API Flask para treinamento e inferência de modelos scikit-learn e um servidor MCP separado com ferramentas determinísticas de análise. Não é sistema de produção nem serviço de decisão automatizada validado.
+## Visão geral
 
-## Problema e objetivo
+O projeto explora uma arquitetura modular para:
+- treinamento demonstrativo com dados sintéticos;
+- inferência de modelos de classificação e regressão;
+- rotas de explicação e inspeção de resultados;
+- ferramentas MCP para simulação exploratória, explicação, auditoria descritiva, monitoramento por limiares e apoio estruturado à comparação de opções.
 
-O projeto reúne uma API de demonstração para classificação/regressão e ferramentas MCP para inspeção exploratória. É útil como base de desenvolvimento para estudar Machine Learning, integração por ferramentas e explicabilidade em aplicações de baixo custo computacional no contexto brasileiro.
+A API HTTP e o servidor MCP são processos separados. Não presuma que o servidor MCP esteja embutido na API Flask.
 
-## Componentes implementados
+## Arquitetura
 
-- API Flask em `app/main.py`, com rotas definidas em `app/api/routes.py`.
-- Serviços e modelos scikit-learn em `app/services/` e `app/models/`.
-- Script de treinamento em `scripts/train.py`.
-- Servidor MCP separado em `app/mcp/server.py`.
-- Artefatos serializados em `models/`.
-- Testes existentes em `tests/`.
+| Componente | Localização | Função |
+|---|---|---|
+| API Flask | `app/main.py`, `app/api/` | Endpoints HTTP |
+| Serviços de ML | `app/services/`, `app/models/` | Treinamento e inferência |
+| Servidor MCP | `app/mcp/server.py` | Ferramentas via MCP |
+| Treinamento | `scripts/train.py` | Geração e treinamento demonstrativo |
+| Testes | `tests/` | Verificações automatizadas |
 
-A API HTTP e o servidor MCP são pontos de entrada separados. Não presuma que o servidor MCP esteja embutido na API Flask.
+## Executar localmente
 
-## Como executar a API
-
-Requisitos: Python 3.10 ou superior, sujeito à compatibilidade real das dependências.
+Requisitos: Python 3.10 ou superior.
 
 ```bash
 git clone https://github.com/felipetjmg1-bit/oraculo-x37.git
@@ -33,23 +36,19 @@ cd oraculo-x37
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\activate
 python -m pip install --upgrade pip
-pip install -r requirements.txt
+python -m pip install -r requirements.txt
 python -m app.main
 ```
 
-A API é configurada para iniciar na porta 5000 por padrão, conforme `.env.example` e `app/core/config.py`. O arquivo `.env.example` documenta variáveis, mas não contém credenciais reais.
+A API utiliza a porta 5000 por padrão. Consulte `.env.example` e `app/core/config.py` para as variáveis disponíveis.
 
-**Atenção às dependências:** o código da API importa Flask. Os manifestos atuais têm versões/faixas divergentes e devem ser reconciliados em trabalho separado após instalação limpa e execução dos testes. Esta documentação não declara que o setup atual esteja validado.
-
-## Exemplo HTTP
-
-Verifique a rota de saúde:
+## Verificar a API
 
 ```bash
 curl http://127.0.0.1:5000/api/v1/health
 ```
 
-Treinamento demonstrativo com dados sintéticos:
+Exemplo de treinamento com dados sintéticos:
 
 ```bash
 curl -X POST http://127.0.0.1:5000/api/v1/classification/train \
@@ -57,71 +56,43 @@ curl -X POST http://127.0.0.1:5000/api/v1/classification/train \
   -d '{"n_samples": 50, "n_features": 10, "test_size": 0.2}'
 ```
 
-Predição após treinamento:
-
-```bash
-curl -X POST http://127.0.0.1:5000/api/v1/classification/predict \
-  -H "Content-Type: application/json" \
-  -d '{"data": [[0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]]}'
-```
-
-A resposta contém o status e as métricas ou predições calculadas. Os valores são ilustrativos; não representam desempenho de modelo validado em dados reais.
+Os dados e resultados de exemplo são demonstrativos. Não representam desempenho validado em dados reais.
 
 ## Servidor MCP
 
-O ponto de entrada separado é:
+O servidor MCP é iniciado separadamente:
 
 ```bash
 python app/mcp/server.py
 ```
 
-O transporte e as ferramentas disponíveis devem ser conferidos no próprio módulo e na documentação MCP do repositório.
-
-## Segurança, privacidade e limitações
-
-- A API demonstrativa não deve ser exposta diretamente à internet sem autenticação, autorização, TLS, rate limiting, validação reforçada e revisão de segurança.
-- Não envie dados pessoais, sensíveis ou sigilosos; use dados sintéticos ou anonimizados.
-- Os dados sintéticos de treinamento não demonstram generalização para dados reais.
-- Explicações de modelo dependem dos dados, do estimador e das condições de execução; não equivalem a causalidade nem a validação científica.
-- Arquivos pickle devem ser tratados como artefatos confiáveis apenas quando sua origem e integridade forem verificadas. Não carregue modelos de fontes desconhecidas.
-- O servidor MCP requer configuração e avaliação próprias; não presuma autenticação ou isolamento de produção.
-- Para aplicações sujeitas à LGPD, defina finalidade, base legal, minimização, retenção, controle de acesso e revisão humana.
+Os testes atuais exercitam diretamente as funções do módulo. Para declarar interoperabilidade ponta a ponta, ainda é necessário validar handshake e invocação por um cliente MCP real e pelo transporte configurado.
 
 ## Testes
 
 ```bash
-pytest -q
+python -m pytest -q
 ```
 
-Os testes estão em `tests/`. Não afirmamos que passaram nesta PR; a instalação limpa deve ser validada depois de resolver a divergência entre `requirements.txt` e `pyproject.toml`.
+O workflow de runtime instala as dependências, executa os testes, inicia a API e registra respostas HTTP reais no ambiente de CI. Consulte [RUNTIME-EVIDENCE](docs/RUNTIME-EVIDENCE.md) e [MCP-VALIDATION](docs/MCP-VALIDATION.md).
 
-## Dependências e licença
+## Publicação
 
-O repositório mantém `requirements.txt` e `pyproject.toml`; atualmente não estão perfeitamente alinhados. Não alteramos as versões nesta PR para evitar uma atualização incompatível sem testes. Licença MIT: consulte [LICENSE](LICENSE).
+O Netlify publica somente a apresentação estática em `site/`. A API Flask e o servidor MCP não são executados pelo Netlify. Consulte [NETLIFY-DEPLOYMENT](docs/NETLIFY-DEPLOYMENT.md) para a separação entre apresentação e backend.
 
+## Segurança e limitações
+
+- Não exponha a API diretamente à internet sem autenticação, autorização, TLS, rate limiting, validação de entrada e revisão de segurança.
+- Não envie dados pessoais, sensíveis ou sigilosos; use dados sintéticos ou anonimizados.
+- Resultados de treinamento sintético não demonstram generalização.
+- Explicações de modelos não equivalem a causalidade ou validação científica.
+- Trate arquivos pickle como artefatos confiáveis somente após verificar origem e integridade.
+- Para uso sujeito à LGPD, documente finalidade, base legal, minimização, retenção, controle de acesso e revisão humana.
+
+## Licença
+
+MIT. Consulte [LICENSE](LICENSE).
 
 ---
 
-**Empresa responsável:** Impulso Digital Soluções em IA.
-
-
-## Fluxo passo a passo
-
-Consulte o [guia textual com as etapas do projeto](docs/PROCESSO-PASSO-A-PASSO.md). O infográfico acima resume visualmente o mesmo fluxo.
-
-
-## Fluxo passo a passo
-
-Consulte o [guia textual com as etapas do projeto](docs/PROCESSO-PASSO-A-PASSO.md). O infográfico acima resume visualmente o mesmo fluxo.
-
-
-## Evidência de execução da API
-
-- [Workflow de instalação, testes e inicialização](.github/workflows/runtime-evidence.yml)
-- [Escopo e limites das evidências](docs/RUNTIME-EVIDENCE.md)
-
-
-## Validação do servidor MCP
-
-- [Testes automatizados das cinco ferramentas](tests/test_mcp_server.py)
-- [Escopo e limitações da validação MCP](docs/MCP-VALIDATION.md)
+**Responsável pelo projeto:** Impulso Digital Soluções em IA.
