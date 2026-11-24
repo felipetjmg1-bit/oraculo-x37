@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07131f">
+  <meta name="description" content="Oráculo X-37: API demonstrativa de Machine Learning, ferramentas MCP e análise explicável. Projeto da Impulso Digital.">
+  <title>Oráculo X-37 | Impulso Digital</title>
+  <style>
+    :root{color-scheme:dark;--bg:#07131f;--panel:#0d2030;--line:#1e3b50;--text:#edf6fb;--muted:#a9bdca;--green:#27d69b;--blue:#55b9ff;--yellow:#f4cf55}
+    *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 85% 0%,#123b4b 0,transparent 36%),linear-gradient(145deg,#07131f,#091b29 65%,#07131f);color:var(--text);font:16px/1.65 Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif}
+    a{color:var(--blue);text-decoration:none}a:hover{text-decoration:underline}.wrap{width:min(1120px,calc(100% - 40px));margin:auto}
+    header{padding:24px 0;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:12px;font-weight:750;letter-spacing:.04em}.mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--green),var(--blue),var(--yellow));display:grid;place-items:center;color:#06131c;font-weight:900}
+    .hero{padding:82px 0 58px;display:grid;grid-template-columns:1.3fr .7fr;gap:44px;align-items:center}.eyebrow{color:var(--green);font-size:.78rem;letter-spacing:.18em;text-transform:uppercase;font-weight:800}
+    h1{font-size:clamp(2.5rem,6vw,5rem);line-height:1.02;letter-spacing:-.055em;margin:16px 0 22px}.lead{font-size:1.15rem;color:var(--muted);max-width:690px}.tag{display:inline-block;border:1px solid #3a6073;color:#d5e8f2;padding:6px 11px;border-radius:999px;font-size:.8rem;margin:8px 6px 0 0}
+    .visual{border:1px solid #28516a;border-radius:24px;padding:28px;background:linear-gradient(145deg,#102d40,#0a1927);box-shadow:0 24px 90px #0007}.core{height:210px;border-radius:18px;background:radial-gradient(circle at 50% 45%,#2c9d92 0,#17616b 18%,#102b40 55%,#0a1927 100%);display:grid;place-items:center;position:relative;overflow:hidden}.core:before,.core:after{content:"";position:absolute;border:1px solid #72f4d566;border-radius:50%;width:180px;height:180px;transform:rotate(35deg) scaleX(1.5)}.core:after{transform:rotate(-35deg) scaleX(1.5)}.orb{width:72px;height:72px;border-radius:22px;background:linear-gradient(135deg,var(--green),var(--blue));box-shadow:0 0 42px #39e3bf99;display:grid;place-items:center;color:#06131c;font-size:2rem;font-weight:900}
+    section{padding:34px 0}.section-title{font-size:1.8rem;letter-spacing:-.03em;margin:0 0 18px}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.card{border:1px solid var(--line);background:#0b1c2a;border-radius:18px;padding:22px}.card h3{margin:0 0 8px;font-size:1.05rem}.card p{margin:0;color:var(--muted);font-size:.95rem}.num{color:var(--green);font-size:.78rem;font-weight:800;letter-spacing:.12em}
+    .notice{border-left:3px solid var(--yellow);background:#172536;padding:18px 20px;border-radius:0 12px 12px 0;color:#d6e2e9}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}.btn{display:inline-flex;padding:12px 17px;border-radius:12px;border:1px solid #37637a;font-weight:700}.btn.primary{background:linear-gradient(100deg,#1dbd91,#4aafea);color:#06131c;border:0}
+    footer{margin-top:48px;padding:26px 0 42px;border-top:1px solid var(--line);color:var(--muted);font-size:.88rem}
+    @media(max-width:760px){.hero{grid-template-columns:1fr;padding:54px 0 34px}.grid{grid-template-columns:1fr}.visual{max-width:480px}.wrap{width:min(100% - 28px,1120px)}}
+  </style>
+</head>
+<body>
+<header><div class="wrap brand"><span class="mark">X</span><span>IMPULSO DIGITAL <span style="color:var(--muted);font-weight:500">/ LABORATÓRIO DE IA</span></span></div></header>
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <div class="eyebrow">Pesquisa aplicada • Machine Learning • XAI</div>
+      <h1>Oráculo<br><span style="color:var(--green)">X-37</span></h1>
+      <p class="lead">Uma base demonstrativa para explorar treinamento e inferência de modelos, análise explicável e ferramentas MCP em uma arquitetura Python modular.</p>
+      <span class="tag">API Flask</span><span class="tag">scikit-learn</span><span class="tag">MCP</span><span class="tag">Dados sintéticos</span>
+      <div class="actions">
+        <a class="btn primary" href="https://github.com/felipetjmg1-bit/oraculo-x37">Explorar código-fonte</a>
+        <a class="btn" href="https://github.com/felipetjmg1-bit/oraculo-x37/blob/main/README.md">Documentação técnica</a>
+      </div>
+    </div>
+    <div class="visual" aria-label="Ilustração abstrata de núcleo de inteligência artificial">
+      <div class="core"><div class="orb">X</div></div>
+      <p style="margin:18px 0 0;color:var(--muted);font-size:.9rem">Arquitetura modular • execução local • validação reproduzível</p>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">Componentes do projeto</h2>
+    <div class="grid">
+      <article class="card"><div class="num">01 / API</div><h3>Treinamento e inferência</h3><p>Rotas HTTP para treinamento demonstrativo, predição e consulta de saúde da API.</p></article>
+      <article class="card"><div class="num">02 / XAI</div><h3>Inspeção explicável</h3><p>Rotinas de explicação e análise de contribuições, com limites documentados e revisão humana.</p></article>
+      <article class="card"><div class="num">03 / MCP</div><h3>Ferramentas interoperáveis</h3><p>Servidor MCP separado da API HTTP, com funções de simulação, auditoria descritiva e monitoramento.</p></article>
+    </div>
+  </section>
+  <section>
+    <h2 class="section-title">Transparência de maturidade</h2>
+    <div class="notice"><strong>Estado declarado:</strong> aplicação demonstrativa em desenvolvimento e validação. A página hospedada no Netlify é uma apresentação estática do projeto. Ela não hospeda nem executa a API Flask ou o servidor MCP.</div>
+    <p style="color:var(--muted);margin-top:16px">Os testes automatizados e a execução da API são verificados separadamente no GitHub Actions. Aprovação de CI não equivale a certificação, validação científica, segurança de produção ou disponibilidade pública.</p>
+    <div class="actions"><a class="btn" href="https://github.com/felipetjmg1-bit/oraculo-x37/actions">Ver verificações de CI</a><a class="btn" href="https://github.com/felipetjmg1-bit/oraculo-x37/blob/main/docs/RUNTIME-EVIDENCE.md">Ver escopo das evidências</a></div>
+  </section>
+</main>
+<footer><div class="wrap">Oráculo X-37 • Projeto da Impulso Digital Soluções em IA • Brasil<br>Material demonstrativo. Não utilizar para decisões reais sem validação, controles de segurança e supervisão especializada.</div></footer>
+</body>
+</html>
