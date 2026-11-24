@@ -1,6 +1,6 @@
 scikit-learn==1.7.2
 numpy==1.24.0
-fastapi==0.109.0
+fastapi==0.162.5
 flask>=3.0,<4.0
 uvicorn==0.27.0
 gunicorn==21.2.0
